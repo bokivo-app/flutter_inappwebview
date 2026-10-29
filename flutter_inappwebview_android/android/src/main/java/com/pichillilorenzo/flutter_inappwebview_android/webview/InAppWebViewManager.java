@@ -29,6 +29,7 @@ import java.util.Set;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 
+// Modified for https://github.com/bokivo-app/flutter-app/issues/2594: backport upstream 4ba6e22848aae9c2ca16bc784023b7fa98cf61e3.
 public class InAppWebViewManager extends ChannelDelegateImpl {
   protected static final String LOG_TAG = "InAppWebViewManager";
   public static final String METHOD_CHANNEL_NAME = "com.pichillilorenzo/flutter_inappwebview_manager";
@@ -207,9 +208,11 @@ public class InAppWebViewManager extends ChannelDelegateImpl {
     super.dispose();
     Collection<FlutterWebView> flutterWebViews = keepAliveWebViews.values();
     for (FlutterWebView flutterWebView : flutterWebViews) {
-      String keepAliveId = flutterWebView.keepAliveId;
-      if (keepAliveId != null) {
-        disposeKeepAlive(flutterWebView.keepAliveId);
+      if (flutterWebView != null) {
+        String keepAliveId = flutterWebView.keepAliveId;
+        if (keepAliveId != null) {
+          disposeKeepAlive(keepAliveId);
+        }
       }
     }
     keepAliveWebViews.clear();
